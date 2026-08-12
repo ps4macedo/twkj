@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" manifest="cache.appcache">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -62,9 +62,9 @@ body{
 #chain-badge .badge-sub{display:block;margin-top:1px;color:#92a8ba;font-size:6px;font-weight:700;letter-spacing:.9px;line-height:7px}
 #steps{position:absolute;left:30px;right:30px;top:119px;height:68px}
 .track{position:absolute;top:16px;height:2px;background:#2c3c49;box-shadow:0 1px 0 rgba(0,0,0,.85)}
-#track-1{left:68px;width:193px}#track-2{left:261px;width:193px}#track-3{left:454px;width:193px}
-.step{position:absolute;top:0;width:136px;text-align:center;color:#778590}
-#step-1{left:0}#step-2{left:193px}#step-3{left:386px}#step-4{left:579px}
+#track-0{left:58px;width:156px}#track-1{left:214px;width:156px}#track-2{left:370px;width:156px}#track-3{left:526px;width:156px}
+.step{position:absolute;top:0;width:116px;text-align:center;color:#778590}
+#step-cache{left:0}#step-1{left:156px}#step-2{left:312px}#step-3{left:468px}#step-4{left:624px}
 .step-node{
     width:34px;height:34px;margin:0 auto;border:1px solid #536370;border-radius:50%;
     background-color:#050b12;background-image:-webkit-linear-gradient(top,#0d1823,#03070b);background-image:linear-gradient(to bottom,#0d1823,#03070b);
@@ -104,7 +104,12 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
 #status-row.warning{color:#d7c49f}#status-row.warning #status-dot{background:#e5b55e;box-shadow:0 0 8px rgba(229,181,94,.56)}
 #status-row.error{color:#d8a2aa}#status-row.error #status-dot{background:#ff7180;box-shadow:0 0 8px rgba(255,113,128,.56)}
 #actions{position:absolute;left:66px;right:66px;top:433px;height:54px;text-align:center}
-#footnote{position:static;margin:14px 0 0;text-align:center;font-size:8px;line-height:10px;letter-spacing:1.2px;color:#657582}
+#cache-status{position:static;margin:0;text-align:center;font-size:8px;line-height:10px;letter-spacing:1.1px;color:#6f8193;text-transform:uppercase}
+#cache-status.ready{color:#35df7a;text-shadow:0 0 7px rgba(53,223,122,.22)}
+#cache-status.busy{color:#48b8ff;text-shadow:0 0 7px rgba(72,184,255,.20)}
+#cache-status.warn{color:#efbd67;text-shadow:0 0 7px rgba(239,189,103,.18)}
+#cache-status.error{color:#ff7b88;text-shadow:0 0 7px rgba(255,123,136,.18)}
+#footnote{position:static;margin:9px 0 0;text-align:center;font-size:8px;line-height:10px;letter-spacing:1.2px;color:#657582}
 </style>
 </head>
 <body>
@@ -119,11 +124,12 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
         </header>
 
         <section id="steps" aria-label="Etapas da verificação">
-            <div id="track-1" class="track"></div><div id="track-2" class="track"></div><div id="track-3" class="track"></div>
-            <div id="step-1" class="step current"><div class="step-node">1</div><div class="step-name">FIRMWARE</div><div class="step-state">DETECTANDO</div></div>
-            <div id="step-2" class="step"><div class="step-node">2</div><div class="step-name">WEBKIT</div><div class="step-state">AGUARDANDO</div></div>
-            <div id="step-3" class="step"><div class="step-node">3</div><div class="step-name">SLOPKIT</div><div class="step-state">AGUARDANDO</div></div>
-            <div id="step-4" class="step"><div class="step-node">4</div><div class="step-name">PLDMGR</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="track-0" class="track"></div><div id="track-1" class="track"></div><div id="track-2" class="track"></div><div id="track-3" class="track"></div>
+            <div id="step-cache" class="step current"><div class="step-node">1</div><div class="step-name">CACHE</div><div class="step-state">VERIFICANDO</div></div>
+            <div id="step-1" class="step"><div class="step-node">2</div><div class="step-name">FIRMWARE</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="step-2" class="step"><div class="step-node">3</div><div class="step-name">WEBKIT</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="step-3" class="step"><div class="step-node">4</div><div class="step-name">SLOPKIT</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="step-4" class="step"><div class="step-node">5</div><div class="step-name">PLDMGR</div><div class="step-state">AGUARDANDO</div></div>
         </section>
 
         <section id="content">
@@ -139,9 +145,10 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
             </div>
         </section>
 
-        <div id="status-row" role="status" aria-live="polite" aria-atomic="true"><span id="status-dot"></span><span id="msg">Identificando o sistema e preparando o fluxo completo…</span></div>
+        <div id="status-row" role="status" aria-live="polite" aria-atomic="true"><span id="status-dot"></span><span id="msg">Preparando cache do Guia antes do fluxo automático…</span></div>
         <div id="actions">
-            <div id="footnote">EXECUÇÃO AUTOMÁTICA EM ANDAMENTO</div>
+            <div id="cache-status">CACHE DO GUIA: VERIFICANDO</div>
+            <div id="footnote">CACHE DO GUIA EM PREPARAÇÃO</div>
         </div>
     </main>
 </div>
@@ -172,10 +179,12 @@ const msg = document.getElementById("msg");
 const statusRow = document.getElementById("status-row");
 const firmwareValue = document.getElementById("firmware-value");
 const offsetsValue = document.getElementById("offsets-value");
+const stepCache = document.getElementById("step-cache");
 const step1 = document.getElementById("step-1");
 const step2 = document.getElementById("step-2");
 const step3 = document.getElementById("step-3");
 const step4 = document.getElementById("step-4");
+const track0 = document.getElementById("track-0");
 const track1 = document.getElementById("track-1");
 const track2 = document.getElementById("track-2");
 const track3 = document.getElementById("track-3");
@@ -183,6 +192,7 @@ const eyebrow = document.getElementById("eyebrow");
 const pageTitle = document.getElementById("page-title");
 const description = document.getElementById("description");
 const footnote = document.getElementById("footnote");
+const cacheStatus = document.getElementById("cache-status");
 
 function fit() {
     const w = window.innerWidth || document.documentElement.clientWidth || 1280;
@@ -197,6 +207,91 @@ function fit() {
 function setStatus(text, tone) {
     msg.textContent = text;
     statusRow.className = tone || "";
+}
+
+function setCacheStatus(text, tone) {
+    if (!cacheStatus) return;
+    cacheStatus.textContent = text;
+    cacheStatus.className = tone || "";
+}
+
+function watchOfflineCache() {
+    const appCache = window.applicationCache;
+    let cacheGateOpen = false;
+    function finishCacheStep(statusText, statusTone, stepState, stepText) {
+        if (cacheGateOpen) return;
+        cacheGateOpen = true;
+        setCacheStatus(statusText, statusTone);
+        setStep(stepCache, stepState, stepText);
+        track0.className = "track" + (stepState === "done" ? " done" : " warn");
+        setStep(step1, "current", "DETECTANDO");
+        footnote.textContent = "EXECUÇÃO AUTOMÁTICA EM ANDAMENTO";
+        setStatus(stepState === "done"
+            ? "Cache do Guia pronto. Identificando o firmware."
+            : "Cache do Guia não confirmou. Continuando com os arquivos disponíveis.",
+            stepState === "done" ? "success" : "warning");
+        startHostFlow();
+    }
+    if (!appCache || typeof appCache.addEventListener !== "function") {
+        finishCacheStep("CACHE DO GUIA: INDISPONÍVEL", "warn", "warn", "INDISP.");
+        return;
+    }
+    let lastTotal = 0;
+    function syncCacheStatus() {
+        if (appCache.status === appCache.IDLE)
+            finishCacheStep("CACHE DO GUIA: PRONTO", "ready", "done", "PRONTO");
+        else if (appCache.status === appCache.CHECKING) {
+            setStep(stepCache, "current", "VERIFICANDO");
+            setCacheStatus("CACHE DO GUIA: VERIFICANDO", "busy");
+        } else if (appCache.status === appCache.DOWNLOADING) {
+            setStep(stepCache, "current", "BAIXANDO");
+            setCacheStatus("CACHE DO GUIA: BAIXANDO", "busy");
+        } else if (appCache.status === appCache.UPDATEREADY) {
+            try { appCache.swapCache(); } catch (_) {}
+            finishCacheStep("CACHE DO GUIA: ATUALIZADO", "ready", "done", "PRONTO");
+        }
+        else if (appCache.status === appCache.OBSOLETE)
+            finishCacheStep("CACHE DO GUIA: LIMPO", "warn", "warn", "LIMPO");
+    }
+    appCache.addEventListener("checking", function () {
+        setStep(stepCache, "current", "VERIFICANDO");
+        setCacheStatus("CACHE DO GUIA: VERIFICANDO", "busy");
+    }, false);
+    appCache.addEventListener("downloading", function () {
+        lastTotal = 0;
+        setStep(stepCache, "current", "BAIXANDO");
+        setCacheStatus("CACHE DO GUIA: BAIXANDO ARQUIVOS", "busy");
+    }, false);
+    appCache.addEventListener("progress", function (event) {
+        const loaded = event && typeof event.loaded === "number" ? event.loaded : 0;
+        const total = event && typeof event.total === "number" ? event.total : 0;
+        if (total > 0) {
+            lastTotal = total;
+            setStep(stepCache, "current", loaded + "/" + total);
+            setCacheStatus("CACHE DO GUIA: " + loaded + "/" + total, "busy");
+        } else {
+            setStep(stepCache, "current", "BAIXANDO");
+            setCacheStatus("CACHE DO GUIA: BAIXANDO", "busy");
+        }
+    }, false);
+    appCache.addEventListener("cached", function () {
+        finishCacheStep("CACHE DO GUIA: PRONTO", "ready", "done", "PRONTO");
+    }, false);
+    appCache.addEventListener("noupdate", function () {
+        finishCacheStep("CACHE DO GUIA: PRONTO", "ready", "done", "PRONTO");
+    }, false);
+    appCache.addEventListener("updateready", function () {
+        try { appCache.swapCache(); } catch (_) {}
+        finishCacheStep("CACHE DO GUIA: ATUALIZADO", "ready", "done", "PRONTO");
+    }, false);
+    appCache.addEventListener("obsolete", function () {
+        finishCacheStep("CACHE DO GUIA: LIMPO", "warn", "warn", "LIMPO");
+    }, false);
+    appCache.addEventListener("error", function () {
+        finishCacheStep(lastTotal > 0 ? "CACHE DO GUIA: INCOMPLETO" : "CACHE DO GUIA: FALHOU",
+            "error", "warn", "AVISO");
+    }, false);
+    syncCacheStatus();
 }
 
 function setStep(node, state, text) {
@@ -232,6 +327,7 @@ let slopkitReady = false;
 let pldmgrSent = false;
 let pldmgrSendAttempts = 0;
 const PLDMGR_MAX_SEND_ATTEMPTS = 3;
+watchOfflineCache();
 
 function fwNum(s) {
     const p = s.split(".");
@@ -259,6 +355,7 @@ function scheduleWebKit() {
     setTimeout(runWebKit, 450);
 }
 
+function startHostFlow() {
 fetch(OFFSETS_URL, { cache: "no-store" })
     .then(function (r) { return r.json(); })
     .then(function (data) {
@@ -319,6 +416,7 @@ fetch(OFFSETS_URL, { cache: "no-store" })
         setStep(step4, "", "INDISPONÍVEL");
         setStatus("Não foi possível verificar o suporte do fluxo completo.", "error");
     });
+}
 
 function runWebKit() {
     if (!entry || engineFrame) return;
