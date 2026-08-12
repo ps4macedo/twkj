@@ -180,7 +180,7 @@ otherwise.</div>
 <div id="console" hidden></div>
 
 <script src="rop.js"></script>
-<script src="main.js?v=16"></script>
+<script src="main.js?v=19"></script>
 <script>window.offsetsReady = new Promise(function (res, rej) {
     var s = document.querySelector('script[src^="../offsets/"]');
     if (!s) return rej(new Error("offsets script was never injected by main.js"));
@@ -196,20 +196,38 @@ otherwise.</div>
 <script type="module">import { establishPrimitive, fakeCellReleased } from "./core.js?v=10";
 import { installWindowP, pairStatus } from "./mem.js?v=10";
 import { int64 } from "./int64.js";
-import { BANNED, ERRNO, K, r32, r16, w32, hexBytes, coreList }
-    from "./poops.js?v=16";
 
+let BANNED, ERRNO, K, r32, r16, w32, hexBytes, coreList;
 let PK = null, makePoopsEngine = null, buildLadder = null;
 
 async function loadPoopsModules() {
-    const lib = await import("./poops.js?v=16");
-
-    await import("./poops.js?v=16");
-    const st = await import("./poops.js?v=16");
+    await window.offsetsReady;
+    const lib = await import("./poops.js?v=37");
+    BANNED = lib.BANNED;
+    ERRNO = lib.ERRNO;
+    K = lib.K;
+    r32 = lib.r32;
+    r16 = lib.r16;
+    w32 = lib.w32;
+    hexBytes = lib.hexBytes;
+    coreList = lib.coreList;
     PK = lib.PK;
     makePoopsEngine = lib.makePoopsEngine;
-    buildLadder = st.buildLadder;
-    flushMark("POOPS-MODULES-LOADED", "deferred-until-after-primitive");
+    buildLadder = lib.buildLadder;
+    if (!PK
+        || typeof PK.LK_PTHREAD_CREATE_NAME_NP !== "number"
+        || PK.LK_PTHREAD_CREATE_NAME_NP < 0
+        || typeof PK.LK_PTHREAD_JOIN !== "number"
+        || PK.LK_PTHREAD_JOIN < 0) {
+        throw new Error("firmware " + window.fw_str
+            + " profile loaded without pthread offsets: create="
+            + (PK && PK.LK_PTHREAD_CREATE_NAME_NP) + ", join="
+            + (PK && PK.LK_PTHREAD_JOIN));
+    }
+    flushMark("POOPS-MODULES-LOADED", "deferred-until-after-primitive-fw="
+        + window.fw_str + "-pthreadCreateOff=0x"
+        + (PK.LK_PTHREAD_CREATE_NAME_NP >>> 0).toString(16)
+        + "-pthreadJoinOff=0x" + (PK.LK_PTHREAD_JOIN >>> 0).toString(16));
 }
 
 const Q = new URLSearchParams(location.search);
@@ -225,20 +243,35 @@ const CORE_OVERRIDE = Q.has("core") ? parseInt(Q.get("core"), 10) : -1;
 
 const PROGRESS_KEY = "slopkit-poops:next";
 const RUNLOG_KEY = "slopkit-poops:last";
-const REV = "slopkit-poops-28-clean-success-menu";
+const ROUTE_VERSION = "41";
+const REV = "slopkit-poops-52-host-auto";
+const STAGE5_ONLY = "ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,"
+    + "ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5";
+const STAGE5_FIRMWARES = Object.freeze([
+    "9.00", "9.05", "9.20", "9.40", "9.60", "10.00", "10.01", "10.20",
+    "10.40", "10.60", "11.00", "11.20", "11.40", "11.60", "12.00"
+]);
 
 function storeGet(k) {
     try { return sessionStorage.getItem(k) || ""; } catch { return ""; }
 }
 function storeSet(k, v) { try { sessionStorage.setItem(k, v); } catch { } }
 function storeDel(k) { try { sessionStorage.removeItem(k); } catch { } }
+function consumeStored(k) {
+    try {
+        sessionStorage.removeItem(k);
+        return sessionStorage.getItem(k) === null;
+    } catch (e) {
+        return false;
+    }
+}
 function storeJson(k) {
     const raw = storeGet(k);
     if (!raw) return null;
     try { return JSON.parse(raw); } catch { return null; }
 }
-const STALLED_AT = storeGet(PROGRESS_KEY);
-const LAST_RUN = storeJson(RUNLOG_KEY);
+let STALLED_AT = storeGet(PROGRESS_KEY);
+let LAST_RUN = storeJson(RUNLOG_KEY);
 
 const TRIGGER = (() => {
     const t = (Q.get("trigger") || "none").toLowerCase();
@@ -282,6 +315,41 @@ const cfg = {
     stage2DeadlineMs: Math.max(60000, Math.min(3600000,
         parseInt(Q.get("stage2deadline") || "", 10) || 900000))
 };
+
+const PRODUCTION_QUERY = Object.freeze({
+    go: "1", auto: "1", production: "1", trigger: "netcontrol",
+    attempts: "8", only: STAGE5_ONLY, log: "debug", payload: "1",
+    v: ROUTE_VERSION
+});
+const STAGE5_INTENT = Q.has("stage5") || Q.has("payload")
+    || Q.getAll("only").some(value => value.split(",")
+        .some(key => key.trim() === "ps10_stage5"));
+
+function exactQuery(expected) {
+    const keys = Object.keys(expected);
+    let count = 0, exact = true;
+    Q.forEach((value, key) => {
+        count++;
+        if (!Object.prototype.hasOwnProperty.call(expected, key)
+            || expected[key] !== value) exact = false;
+    });
+    return exact && count === keys.length
+        && keys.every(key => Q.getAll(key).length === 1);
+}
+
+const STAGE5_REQUEST_ERROR = (() => {
+    if (!STAGE5_INTENT) return "";
+    if (!exactQuery(PRODUCTION_QUERY)) return "noncanonical-stage5-request";
+    return STAGE5_FIRMWARES.indexOf(window.fw_str) >= 0
+        ? "" : "unsupported-stage5-firmware";
+})();
+
+const PRODUCTION_REQUEST_ERROR = (() => {
+    if (!Q.has("production") && !Q.has("auto") && !Q.has("next")) return "";
+    return exactQuery(PRODUCTION_QUERY)
+        ? "" : "noncanonical-production-request";
+})();
+const PRODUCTION_RUN = exactQuery(PRODUCTION_QUERY);
 
 let elfldrSpawned = false;
 const screenLines = [];
@@ -1641,10 +1709,41 @@ function lastRunText() {
 
     screenLine("slopkit -- reading the one-shot safety latch");
 
+    if (PRODUCTION_REQUEST_ERROR) {
+        renderNav("", false);
+        stage("Production request refused: " + PRODUCTION_REQUEST_ERROR, "bad");
+        summaryEl.textContent = "NOTHING was cleared or executed.";
+        flushMark("POOPS-PRODUCTION-REFUSED", PRODUCTION_REQUEST_ERROR);
+        return;
+    }
+
+    if (STAGE5_REQUEST_ERROR) {
+        renderNav("", false);
+        stage("Stage 5 request refused: " + STAGE5_REQUEST_ERROR, "bad");
+        summaryEl.textContent = "NOTHING was cleared or executed.";
+        flushMark("POOPS-STAGE5-REFUSED", STAGE5_REQUEST_ERROR);
+        return;
+    }
+
     if (CLEARLATCH) {
         renderNav("", false);
         await clearMain();
         return;
+    }
+
+    if (PRODUCTION_RUN) {
+        const runlogCleared = consumeStored(RUNLOG_KEY);
+        const progressCleared = consumeStored(PROGRESS_KEY);
+        const latchCleared = consumeStored(LATCH_KEY);
+        if (!runlogCleared || !progressCleared || !latchCleared) {
+            stage("Production run refused: stale state could not be cleared", "bad");
+            flushMark("POOPS-PRODUCTION-REFUSED", "stale-state-clear-unverified");
+            return;
+        }
+        LAST_RUN = null;
+        STALLED_AT = "";
+        latchState = "clear";
+        flushMark("PRODUCTION-FRESH-BOOT-ASSERTED", "stale-state-cleared=1");
     }
 
     stage("checking the one-shot safety latch");

