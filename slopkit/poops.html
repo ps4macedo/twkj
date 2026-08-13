@@ -516,6 +516,8 @@ const PAYLOAD_ALLOWLIST = [
     "pldmgr_v0.5.1.elf",
     "Host-PSM-Offline-Installer-v1.0.0.elf"
 ];
+const PAYLOAD_SEQUENCE_MAX_ATTEMPTS = 3;
+const PAYLOAD_SEQUENCE_RETRY_DELAY_MS = 300;
 let payloadSendStore = null;
 let payloadSockaddrStore = null;
 let payloadSocketOptionStore = null;
@@ -538,6 +540,14 @@ function payloadSyscallError(operation, result) {
     if (result)
         detail += " (s32=" + result.s32 + ", raw=" + result.hex + ")";
     return new Error(operation + " failed: " + detail);
+}
+
+function payloadConnectRetry(error) {
+    return /connect to 127\.0\.0\.1:9021/i.test(String(error && error.message || error || ""));
+}
+
+function wait(ms) {
+    return new Promise(function (resolve) { setTimeout(resolve, ms); });
 }
 
 function preparePayloadSender() {
@@ -683,12 +693,7 @@ async function sendPayloadFromParent(name) {
     payloadSendBusy = true;
     try {
         const result = await sendPayloadToElfldr(name);
-        flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
-            + result.bytes + "-target=" + clean(result.target)
-            + "-port=" + result.port);
-        if (result.closeWarning)
-            flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
-                + "-why=" + clean(result.closeWarning.message || result.closeWarning));
+        flushPayloadSent(result);
     } catch (error) {
         flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
             + clean(error && error.message ? error.message : error));
@@ -703,11 +708,68 @@ async function sendPayloadFromParent(name) {
     }
 }
 
+function flushPayloadSent(result) {
+    flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
+        + result.bytes + "-target=" + clean(result.target)
+        + "-port=" + result.port);
+    if (result.closeWarning)
+        flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
+            + "-why=" + clean(result.closeWarning.message || result.closeWarning));
+}
+
+async function sendPayloadWithRetry(name) {
+    for (let attempt = 1; attempt <= PAYLOAD_SEQUENCE_MAX_ATTEMPTS; attempt++) {
+        try {
+            const result = await sendPayloadToElfldr(name);
+            flushPayloadSent(result);
+            return;
+        } catch (error) {
+            if (attempt < PAYLOAD_SEQUENCE_MAX_ATTEMPTS && payloadConnectRetry(error)) {
+                flushMark("ELF-SEND-RETRY", "name=" + clean(name)
+                    + "-attempt=" + attempt);
+                await wait(PAYLOAD_SEQUENCE_RETRY_DELAY_MS * attempt);
+                continue;
+            }
+            throw error;
+        }
+    }
+}
+
+async function sendPayloadSequenceFromParent(names) {
+    if (payloadSendBusy) {
+        flushMark("ELF-SEND-BUSY", "name=sequence");
+        return;
+    }
+    payloadSendBusy = true;
+    let currentName = "";
+    try {
+        const list = Array.isArray(names) ? names : [];
+        for (let i = 0; i < list.length; i++) {
+            currentName = String(list[i] || "");
+            await sendPayloadWithRetry(currentName);
+        }
+    } catch (error) {
+        flushMark("ELF-SEND-FAILED", "name=" + clean(currentName) + "-why="
+            + clean(error && error.message ? error.message : error));
+    } finally {
+        if (payloadSenderBlocked) {
+            payloadSendBusy = true;
+            setCatResult(false);
+            flushMark("ELF-SENDER-BLOCKED", clean(payloadSenderBlocked));
+        } else {
+            payloadSendBusy = false;
+        }
+    }
+}
+
 window.addEventListener("message", function (event) {
     const data = event && event.data;
-    if (!data || data.source !== "premium-shell"
-        || data.type !== "send-payload") return;
-    sendPayloadFromParent(String(data.name || ""));
+    if (!data || data.source !== "premium-shell") return;
+    if (data.type === "send-payload") {
+        sendPayloadFromParent(String(data.name || ""));
+    } else if (data.type === "send-payload-sequence") {
+        sendPayloadSequenceFromParent(data.names);
+    }
 });
 
 function stage(text, cls) {

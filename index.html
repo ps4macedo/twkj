@@ -146,7 +146,7 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
             <div id="content-copy">
                 <div id="eyebrow">FLUXO COMPLETO</div>
                 <h1 id="page-title">WebKit + Slopkit + PLDMGR + Host PSM</h1>
-                <p id="description">Firmwares compatíveis: 9.00 - 12.00. Execução automática até o Host PSM.</p>
+                <p id="description">Firmwares compatíveis: 9.00 - 12.00. Execução automática até o PLDMGR.</p>
             </div>
             <div id="firmware-card">
                 <div id="firmware-label" class="data-label">Firmware detectado</div>
@@ -212,7 +212,7 @@ const footnote = document.getElementById("footnote");
 const cacheStatus = document.getElementById("cache-status");
 const DEFAULT_EYEBROW = "FLUXO COMPLETO";
 const DEFAULT_PAGE_TITLE = "WebKit + Slopkit + PLDMGR + Host PSM";
-const DEFAULT_DESCRIPTION = "Firmwares compatíveis: 9.00 - 12.00. Execução automática até o Host PSM.";
+const DEFAULT_DESCRIPTION = "Firmwares compatíveis: 9.00 - 12.00. Execução automática até o PLDMGR.";
 
 function fit() {
     const w = window.innerWidth || document.documentElement.clientWidth || 1280;
@@ -474,13 +474,8 @@ let webkitStarted = false;
 let slopkitSupported = false;
 let slopFrame = null;
 let slopkitReady = false;
-let pldmgrSent = false;
-let pldmgrSendAttempts = 0;
-let hostPsmSent = false;
-let hostPsmSendAttempts = 0;
-let activePayloadName = "";
-const PLDMGR_MAX_SEND_ATTEMPTS = 3;
-const HOST_PSM_MAX_SEND_ATTEMPTS = 3;
+let payloadSequenceSent = false;
+let pldmgrReported = false;
 if (hostSessionInterlocked()) {
     showHostSessionInterlock();
 } else {
@@ -678,7 +673,7 @@ function startSlopkit() {
     eyebrow.textContent = "SLOPKIT EM EXECUÇÃO";
     pageTitle.textContent = "Executando Slopkit";
     description.textContent = "Slopkit em execução. Preparando o ambiente para o PLDMGR e Host PSM.";
-    footnote.textContent = "PLDMGR SERÁ CARREGADO AUTOMATICAMENTE";
+    footnote.textContent = "PLDMGR E HOST PSM SERÃO CARREGADOS AUTOMATICAMENTE";
     setStatus("Slopkit iniciado. Aguardando conclusão da etapa…", "");
 
     slopFrame = document.createElement("iframe");
@@ -719,10 +714,6 @@ function detailFrom(extra, key) {
     return value.replace(/_/g, " ").slice(0, 180);
 }
 
-function isPldmgrConnectRetry(why) {
-    return /connect to 127\.0\.0\.1:9021/i.test(String(why || ""));
-}
-
 function handleSlopkitMessage(event) {
     const data = event && event.data;
     if (!data || data.source !== "slopkit-poops") return;
@@ -742,7 +733,7 @@ function handleSlopkitMessage(event) {
     } else if (tag === "STAGE3-DONE") {
         setStatus("Slopkit avançou. Validando o ambiente…", "");
     } else if (tag === "STAGE4-DONE") {
-        setStatus("Slopkit concluiu a preparação. Carregando o PLDMGR…", "");
+        setStatus("Slopkit concluiu a preparação. Carregando PLDMGR e Host PSM…", "");
     } else if (tag === "STAGE5-DONE"
         && /(?:^|-)joinRet=0(?:-|$)/.test(extra)
         && /(?:^|-)shellcodeRet=0x0+(?:-|$)/.test(extra)) {
@@ -752,10 +743,10 @@ function handleSlopkitMessage(event) {
         setStep(step4, "current", "ENVIANDO");
         eyebrow.textContent = "PLDMGR EM EXECUÇÃO";
         pageTitle.textContent = "Carregando PLDMGR";
-        description.textContent = "Ambiente pronto. PLDMGR será carregado automaticamente para concluir o fluxo.";
-        footnote.textContent = "PLDMGR SENDO CARREGADO";
-        setStatus("Ambiente pronto. Carregando PLDMGR automaticamente em instantes.", "success");
-        setTimeout(sendPldmgr, 900);
+        description.textContent = "Ambiente pronto. PLDMGR será carregado e o Host PSM finalizará a instalação do atalho.";
+        footnote.textContent = "SEQUÊNCIA PLDMGR + HOST PSM EM ANDAMENTO";
+        setStatus("Ambiente pronto. Carregando PLDMGR e Host PSM automaticamente.", "success");
+        setTimeout(sendPayloadSequence, 900);
     } else if (tag === "POOPS-COMPLETE") {
         const m = /(?:^|-)fail=(\d+)(?:-|$)/.exec(extra);
         const failed = m ? parseInt(m[1], 10) : 1;
@@ -769,104 +760,59 @@ function handleSlopkitMessage(event) {
     } else if (tag === "ELF-SENT") {
         const name = payloadNameFrom(extra);
         if (name === PLDMGR_PAYLOAD) {
+            pldmgrReported = true;
             setStep(step4, "done", "CONCLUÍDO");
             track4.className = "track done";
             setStep(step5, "current", "ENVIANDO");
             eyebrow.textContent = "HOST PSM EM EXECUÇÃO";
-            pageTitle.textContent = "Carregando Host PSM";
-            description.textContent = "PLDMGR concluído. Host PSM Offline Installer será carregado automaticamente.";
-            footnote.textContent = "HOST PSM SENDO CARREGADO";
-            setStatus("PLDMGR concluído. Carregando Host PSM automaticamente em instantes.", "success");
-            setTimeout(sendHostPsm, 1500);
+            pageTitle.textContent = "Instalando Host PSM";
+            description.textContent = "PLDMGR carregado. Host PSM está finalizando o atalho offline.";
+            footnote.textContent = "HOST PSM FINALIZANDO O ATALHO";
+            setStatus("PLDMGR carregado. Host PSM em andamento.", "success");
             return;
         }
         if (name === HOST_PSM_PAYLOAD) {
             setStep(step5, "done", "CONCLUÍDO");
             eyebrow.textContent = "FLUXO CONCLUÍDO";
-            pageTitle.textContent = "Host PSM carregado";
-            description.textContent = "Host PSM Offline Installer carregado para execução. WebKit, Slopkit e PLDMGR concluídos.";
+            pageTitle.textContent = "Fluxo concluído";
+            description.textContent = "WebKit, Slopkit, PLDMGR e Host PSM carregados com sucesso.";
             footnote.textContent = "FLUXO CONCLUÍDO";
-            setStatus("Host PSM Offline Installer carregado para execução com sucesso.", "success");
-            return;
+            setStatus("Host PSM carregado com sucesso.", "success");
         }
-        setStatus("PLDMGR carregado com sucesso.", "success");
     } else if (tag === "ELF-SEND-FAILED") {
         const name = payloadNameFrom(extra);
         const why = detailFrom(extra, "why");
-        if ((!name || name === PLDMGR_PAYLOAD)
-            && isPldmgrConnectRetry(why)
-            && pldmgrSendAttempts < PLDMGR_MAX_SEND_ATTEMPTS) {
-            pldmgrSent = false;
-            setStep(step4, "current", "REPETINDO");
-            setStatus("PLDMGR ainda não aceitou conexão. Nova tentativa automática…", "warning");
-            footnote.textContent = "AGUARDANDO O ELF LOADER RESPONDER";
-            setTimeout(sendPldmgr, 1200 * pldmgrSendAttempts);
-            return;
-        }
-        if (name === HOST_PSM_PAYLOAD
-            && isPldmgrConnectRetry(why)
-            && hostPsmSendAttempts < HOST_PSM_MAX_SEND_ATTEMPTS) {
-            hostPsmSent = false;
-            setStep(step5, "current", "REPETINDO");
-            setStatus("Host PSM ainda não aceitou conexão. Nova tentativa automática…", "warning");
-            footnote.textContent = "AGUARDANDO O HOST PSM RESPONDER";
-            setTimeout(sendHostPsm, 1200 * hostPsmSendAttempts);
-            return;
-        }
-        if (name === HOST_PSM_PAYLOAD) {
+        if (!name || name === PLDMGR_PAYLOAD) {
+            setStep(step4, "fail", "FALHOU");
+            setStep(step5, "", "INDISPONÍVEL");
+            setStatus(why
+                ? "Falha ao carregar o PLDMGR. Motivo: " + why
+                : "Falha ao carregar o PLDMGR.", "error");
+        } else if (name === HOST_PSM_PAYLOAD) {
             setStep(step5, "fail", "FALHOU");
             setStatus(why
                 ? "Falha ao carregar o Host PSM. Motivo: " + why
                 : "Falha ao carregar o Host PSM.", "error");
-            footnote.textContent = "VERIFIQUE O ESTADO DO CARREGAMENTO";
-            return;
         }
-        if (!name || name === PLDMGR_PAYLOAD) {
-            setStep(step4, "fail", "FALHOU");
-            setStep(step5, "", "INDISPONÍVEL");
-        }
-        setStatus(why
-            ? "Falha ao carregar o PLDMGR. Motivo: " + why
-            : "Falha ao carregar o PLDMGR.", "error");
         footnote.textContent = "VERIFIQUE O ESTADO DO CARREGAMENTO";
     } else if (tag === "ELF-SENDER-BLOCKED") {
-        setStep(activePayloadName === HOST_PSM_PAYLOAD ? step5 : step4, "fail", "BLOQUEADO");
+        setStep(pldmgrReported ? step5 : step4, "fail", "BLOQUEADO");
         setStatus("Carregamento bloqueado até reiniciar o console.", "error");
         footnote.textContent = "REINÍCIO NECESSÁRIO";
     }
 }
 
-function sendPldmgr() {
-    if (!slopkitReady || pldmgrSent || !slopFrame || !slopFrame.contentWindow) return;
-    pldmgrSent = true;
-    pldmgrSendAttempts++;
-    activePayloadName = PLDMGR_PAYLOAD;
+function sendPayloadSequence() {
+    if (!slopkitReady || payloadSequenceSent || !slopFrame || !slopFrame.contentWindow) return;
+    payloadSequenceSent = true;
     setStep(step4, "current", "ENVIANDO");
-    setStatus(pldmgrSendAttempts > 1
-        ? "Carregando PLDMGR automaticamente… tentativa " + pldmgrSendAttempts + "."
-        : "Carregando PLDMGR automaticamente…", "");
+    setStep(step5, "", "AGUARDANDO");
+    setStatus("Carregando PLDMGR e Host PSM automaticamente…", "");
     footnote.textContent = "NÃO FECHE ESTA PÁGINA DURANTE ESTA ETAPA";
     slopFrame.contentWindow.postMessage({
         source: "premium-shell",
-        type: "send-payload",
-        name: PLDMGR_PAYLOAD
-    }, "*");
-}
-
-function sendHostPsm() {
-    if (!slopkitReady || hostPsmSent || !slopFrame || !slopFrame.contentWindow) return;
-    hostPsmSent = true;
-    hostPsmSendAttempts++;
-    activePayloadName = HOST_PSM_PAYLOAD;
-    setStep(step5, "current", "ENVIANDO");
-    setStatus(hostPsmSendAttempts > 1
-        ? "Carregando Host PSM automaticamente… tentativa " + hostPsmSendAttempts + "."
-        : "Carregando Host PSM automaticamente…", "");
-    footnote.textContent = "NÃO FECHE ESTA PÁGINA DURANTE ESTA ETAPA";
-    slopFrame.contentWindow.postMessage({
-        source: "premium-shell",
-        type: "send-payload",
-        name: HOST_PSM_PAYLOAD
+        type: "send-payload-sequence",
+        names: [PLDMGR_PAYLOAD, HOST_PSM_PAYLOAD]
     }, "*");
 }
 

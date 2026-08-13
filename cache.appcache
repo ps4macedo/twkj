@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# host-psmacedo-v1.0.0-offline-cache-20260813-final-clean-step1-ui-card-112-cache-msg-host-psm-step
+# host-psmacedo-v1.0.0-offline-cache-20260813-pldmgr-then-host-psm
 
 CACHE:
 index.html
@@ -80,9 +80,9 @@ slopkit/poops.js?v=37
 slopkit/rop_slave.js
 
 payloads/elfldr-ps5-1360.elf
+payloads/Host-PSM-Offline-Installer-v1.0.0.elf
 payloads/kexp_2026_05_25.bin
 payloads/pldmgr_v0.5.1.elf
-payloads/Host-PSM-Offline-Installer-v1.0.0.elf
 
 FALLBACK:
 ./ index.html
