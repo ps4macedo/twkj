@@ -512,7 +512,10 @@ let payloadSendBusy = false;
 const PAYLOAD_PORT = 9021;
 const PAYLOAD_BUFFER_SIZE = 0x10000;
 const PAYLOAD_MAX_SIZE = 0x400000;
-const PAYLOAD_ALLOWLIST = ["pldmgr_v0.5.1.elf"];
+const PAYLOAD_ALLOWLIST = [
+    "pldmgr_v0.5.1.elf",
+    "Host-PSM-Offline-Installer-v1.0.0.elf"
+];
 let payloadSendStore = null;
 let payloadSockaddrStore = null;
 let payloadSocketOptionStore = null;
