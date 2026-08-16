@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="pt-BR" manifest="cache.appcache">
+<html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#020711">
-<title>Teste de userland • PS5</title>
+<title>PS5/WEBKIT-SLOPKIT-PLDMGR-HOST-PSM</title>
 <style>
 *{box-sizing:border-box}
 html,body{width:100%;height:100%;margin:0;overflow:hidden}
@@ -29,7 +29,7 @@ body{
 #panel{
     position:absolute;left:240px;top:132px;width:800px;height:498px;overflow:hidden;
     -webkit-transform:scale(1.2);transform:scale(1.2);
-    -webkit-transform-origin:center center;transform-origin:center center;
+    -webkit-transform-forigin:center center;transform-origin:center center;
     border:1px solid #365b79;border-radius:24px;
     background-color:#040b14;
     background-image:-webkit-linear-gradient(top,#0c1d30 0%,#071522 44%,#020810 100%);
@@ -64,9 +64,9 @@ body{
 #chain-badge .badge-sub{display:block;margin-top:1px;color:#92a8ba;font-size:6px;font-weight:700;letter-spacing:.9px;line-height:7px}
 #steps{position:absolute;left:30px;right:30px;top:119px;height:68px}
 .track{position:absolute;top:16px;height:2px;background:#2c3c49;box-shadow:0 1px 0 rgba(0,0,0,.85)}
-#track-0{left:52px;width:127px}#track-1{left:179px;width:127px}#track-2{left:306px;width:127px}#track-3{left:433px;width:127px}#track-4{left:560px;width:128px}
+#track-0{left:52px;width:159px}#track-1{left:211px;width:159px}#track-2{left:370px;width:159px}#track-3{left:529px;width:159px}
 .step{position:absolute;top:0;width:104px;text-align:center;color:#778590}
-#step-cache{left:0}#step-1{left:127px}#step-2{left:254px}#step-3{left:381px}#step-4{left:508px}#step-5{left:636px}
+#step-1{left:0}#step-2{left:159px}#step-3{left:318px}#step-4{left:477px}#step-5{left:636px}
 .step-node{
     width:34px;height:34px;margin:0 auto;border:1px solid #536370;border-radius:50%;
     background-color:#050b12;background-image:-webkit-linear-gradient(top,#0d1823,#03070b);background-image:linear-gradient(to bottom,#0d1823,#03070b);
@@ -90,13 +90,6 @@ body{
 #eyebrow{font-size:9px;font-weight:700;letter-spacing:3.4px;color:#48b8ff;text-transform:uppercase}
 h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7f9fb;text-shadow:0 3px 5px rgba(0,0,0,.88)}
 #description{margin:12px 0 0;width:350px;font-size:11px;line-height:1.5;color:#aab7c2}
-#content.cache-loading h1{display:flex;align-items:baseline;gap:10px;font-size:31px;line-height:38px;letter-spacing:.1px;color:#f7f9fb;white-space:nowrap;text-shadow:0 3px 5px rgba(0,0,0,.88)}
-#content.cache-loading #description{width:352px;margin-top:9px;color:#aab7c2}
-.cache-card-count{display:inline-grid;width:144px;grid-template-columns:58px 18px 58px;column-gap:5px;align-items:baseline;color:#f7f9fb}
-.cache-card-number{display:inline-block;text-align:right;font-family:"Courier New",monospace;font-size:31px;font-weight:800;line-height:38px;letter-spacing:0;color:#f7f9fb}
-.cache-card-total{text-align:left}
-.cache-card-separator{display:inline-block;text-align:center;font-size:28px;font-weight:800;line-height:38px;color:#f7f9fb}
-.cache-card-unit{display:inline-block;font-size:18px;font-weight:800;line-height:22px;letter-spacing:1.15px;color:#f7f9fb}
 #firmware-card{
     position:absolute;right:25px;top:24px;width:214px;height:124px;border-left:1px solid rgba(67,119,158,.58);padding:10px 0 0 28px;
 }
@@ -113,11 +106,9 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
 #status-row.warning{color:#d7c49f}#status-row.warning #status-dot{background:#e5b55e;box-shadow:0 0 8px rgba(229,181,94,.56)}
 #status-row.error{color:#d8a2aa}#status-row.error #status-dot{background:#ff7180;box-shadow:0 0 8px rgba(255,113,128,.56)}
 #actions{position:absolute;left:66px;right:66px;top:420px;height:70px;text-align:center}
-#cache-status{position:static;margin:0;text-align:center;font-size:8px;line-height:10px;letter-spacing:1.1px;color:#6f8193;text-transform:uppercase}
-#cache-status.ready{color:#35df7a;text-shadow:0 0 7px rgba(53,223,122,.22)}
-#cache-status.busy{color:#48b8ff;text-shadow:0 0 7px rgba(72,184,255,.20)}
-#cache-status.warn{color:#efbd67;text-shadow:0 0 7px rgba(239,189,103,.18)}
-#cache-status.error{color:#ff7b88;text-shadow:0 0 7px rgba(255,123,136,.18)}
+#notice-status{position:static;min-height:10px;margin:0;text-align:center;font-size:8px;line-height:10px;letter-spacing:1.1px;color:#6f8193;text-transform:uppercase}
+#notice-status:empty{visibility:hidden}
+#notice-status.warn{color:#efbd67;text-shadow:0 0 7px rgba(239,189,103,.18)}
 #footnote{position:static;margin:8px 0 0;text-align:center;font-size:8px;line-height:10px;letter-spacing:1.2px;color:#657582}
 </style>
 </head>
@@ -129,24 +120,23 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
             <div id="brand">PS5 <span class="brand-accent">/</span> WEBKIT <span class="brand-accent">+</span> SLOPKIT <span class="brand-accent">+</span> PLDMGR <span class="brand-accent">+</span> HOST PSM</div>
             <div id="subtitle">FIRMWARES COMPATÍVEIS: 9.00 - 12.00</div>
             <div id="credits-line">Créditos: WebKit: Jordyidk | Slopkit: Egy, Sonic, Yenyen, Zeco, Gezine, Echostretch, Ufm42, TheFloW, John Tornblom, Flatz, PS5 R&amp;D Discord.</div>
-            <div id="chain-badge"><span class="badge-label">HOST PSMACEDO</span><span class="badge-main">AUTOMÁTICO</span><span class="badge-sub">VERSÃO 1.0.0</span></div>
+            <div id="chain-badge"><span class="badge-label">HOST PSMACEDO</span><span class="badge-main">AUTOMÁTICO</span><span class="badge-sub">VERSÃO 1.1.0</span></div>
         </header>
 
         <section id="steps" aria-label="Etapas da verificação">
-            <div id="track-0" class="track"></div><div id="track-1" class="track"></div><div id="track-2" class="track"></div><div id="track-3" class="track"></div><div id="track-4" class="track"></div>
-            <div id="step-cache" class="step current"><div class="step-node">1</div><div class="step-name">CACHE</div><div class="step-state">VERIFICANDO</div></div>
-            <div id="step-1" class="step"><div class="step-node">2</div><div class="step-name">FIRMWARE</div><div class="step-state">AGUARDANDO</div></div>
-            <div id="step-2" class="step"><div class="step-node">3</div><div class="step-name">WEBKIT</div><div class="step-state">AGUARDANDO</div></div>
-            <div id="step-3" class="step"><div class="step-node">4</div><div class="step-name">SLOPKIT</div><div class="step-state">AGUARDANDO</div></div>
-            <div id="step-4" class="step"><div class="step-node">5</div><div class="step-name">PLDMGR</div><div class="step-state">AGUARDANDO</div></div>
-            <div id="step-5" class="step"><div class="step-node">6</div><div class="step-name">HOST PSM</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="track-0" class="track"></div><div id="track-1" class="track"></div><div id="track-2" class="track"></div><div id="track-3" class="track"></div>
+            <div id="step-1" class="step current"><div class="step-node">1</div><div class="step-name">FIRMWARE</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="step-2" class="step"><div class="step-node">2</div><div class="step-name">WEBKIT</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="step-3" class="step"><div class="step-node">3</div><div class="step-name">SLOPKIT</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="step-4" class="step"><div class="step-node">4</div><div class="step-name">PLDMGR</div><div class="step-state">AGUARDANDO</div></div>
+            <div id="step-5" class="step"><div class="step-node">5</div><div class="step-name">HOST PSM</div><div class="step-state">AGUARDANDO</div></div>
         </section>
 
         <section id="content">
             <div id="content-copy">
                 <div id="eyebrow">FLUXO COMPLETO</div>
                 <h1 id="page-title">WebKit + Slopkit + PLDMGR + Host PSM</h1>
-                <p id="description">Firmwares compatíveis: 9.00 - 12.00. Execução automática até o PLDMGR.</p>
+                <p id="description">Firmwares compatíveis: 9.00 - 12.00. Execução automática até o Host PSM.</p>
             </div>
             <div id="firmware-card">
                 <div id="firmware-label" class="data-label">Firmware detectado</div>
@@ -155,10 +145,10 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
             </div>
         </section>
 
-        <div id="status-row" role="status" aria-live="polite" aria-atomic="true"><span id="status-dot"></span><span id="msg">Preparando cache do Guia antes do fluxo automático…</span></div>
+        <div id="status-row" role="status" aria-live="polite" aria-atomic="true"><span id="status-dot"></span><span id="msg">Identificando o firmware e validando os arquivos necessários…</span></div>
         <div id="actions">
-            <div id="cache-status">CACHE DO GUIA: VERIFICANDO</div>
-            <div id="footnote">CACHE DO GUIA EM PREPARAÇÃO</div>
+            <div id="notice-status"></div>
+            <div id="footnote">EXECUÇÃO AUTOMÁTICA EM ANDAMENTO</div>
         </div>
     </main>
 </div>
@@ -171,7 +161,7 @@ const ENGINE_PASS_KEY = "renderer-notify-auto-proof-2:passed";
 const OFFSETS_URL = "offsets/offsets.json";
 const SLOPKIT_URL = "slopkit/poops.html?go=1&auto=1&production=1&trigger=netcontrol&attempts=8&only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&log=debug&payload=1&v=final";
 const PLDMGR_PAYLOAD = "pldmgr_v0.5.1.elf";
-const HOST_PSM_PAYLOAD = "Host-PSM-Offline-Installer-v1.0.0.elf";
+const HOST_PSM_PAYLOAD = "Host-PSM-v1.1.0.elf";
 const HOST_INTERLOCK_KEY = "host_psmacedo_v3_slopkit_started";
 const HOST_INTERLOCK_VALUE = "1";
 const HOST_INTERLOCK_TOKEN = HOST_INTERLOCK_KEY + "=" + HOST_INTERLOCK_VALUE;
@@ -193,7 +183,6 @@ const msg = document.getElementById("msg");
 const statusRow = document.getElementById("status-row");
 const firmwareValue = document.getElementById("firmware-value");
 const offsetsValue = document.getElementById("offsets-value");
-const stepCache = document.getElementById("step-cache");
 const step1 = document.getElementById("step-1");
 const step2 = document.getElementById("step-2");
 const step3 = document.getElementById("step-3");
@@ -203,16 +192,12 @@ const track0 = document.getElementById("track-0");
 const track1 = document.getElementById("track-1");
 const track2 = document.getElementById("track-2");
 const track3 = document.getElementById("track-3");
-const track4 = document.getElementById("track-4");
 const contentCard = document.getElementById("content");
 const eyebrow = document.getElementById("eyebrow");
 const pageTitle = document.getElementById("page-title");
 const description = document.getElementById("description");
 const footnote = document.getElementById("footnote");
-const cacheStatus = document.getElementById("cache-status");
-const DEFAULT_EYEBROW = "FLUXO COMPLETO";
-const DEFAULT_PAGE_TITLE = "WebKit + Slopkit + PLDMGR + Host PSM";
-const DEFAULT_DESCRIPTION = "Firmwares compatíveis: 9.00 - 12.00. Execução automática até o PLDMGR.";
+const noticeStatus = document.getElementById("notice-status");
 
 function fit() {
     const w = window.innerWidth || document.documentElement.clientWidth || 1280;
@@ -229,52 +214,9 @@ function setStatus(text, tone) {
     statusRow.className = tone || "";
 }
 
-function setCacheStatus(text, tone) {
-    if (!cacheStatus) return;
-    cacheStatus.textContent = text;
-    cacheStatus.className = tone || "";
-    if (/^CACHE DO GUIA:/i.test(text)) setCacheCardProgress(text);
-}
-
-function cacheCardProgressCount(text) {
-    const value = String(text || "").replace(/^CACHE DO GUIA:\s*/i, "").trim();
-    return /^(\d+)\/(\d+)$/.exec(value);
-}
-
-function cacheCardProgressText(text) {
-    const value = String(text || "").replace(/^CACHE DO GUIA:\s*/i, "").trim();
-    if (/ATUALIZADO/i.test(value)) return "Cache atualizada";
-    if (/BAIXANDO/i.test(value)) return "Baixando cache";
-    if (/VERIFICANDO/i.test(value)) return "Verificando cache";
-    if (/PRONTO|CARREGADO/i.test(value)) return "Cache pronta";
-    if (/LIMPO/i.test(value)) return "Cache limpa";
-    if (/INDISPON/i.test(value)) return "Cache indisponível";
-    return "Preparando cache";
-}
-
-function setCacheCardProgress(text) {
-    const count = cacheCardProgressCount(text);
-    if (contentCard) contentCard.className = "cache-loading";
-    eyebrow.textContent = "CACHE DO GUIA";
-    if (count) {
-        pageTitle.innerHTML =
-            '<span class="cache-card-count">' +
-            '<span class="cache-card-number">' + count[1] + '</span>' +
-            '<span class="cache-card-separator">/</span>' +
-            '<span class="cache-card-number cache-card-total">' + count[2] + '</span>' +
-            '</span>' +
-            '<span class="cache-card-unit">ARQUIVOS</span>';
-    } else {
-        pageTitle.textContent = cacheCardProgressText(text);
-    }
-    description.textContent = "Preparando os arquivos antes do fluxo automático.";
-}
-
-function resetCacheCard() {
-    if (contentCard) contentCard.className = "";
-    eyebrow.textContent = DEFAULT_EYEBROW;
-    pageTitle.textContent = DEFAULT_PAGE_TITLE;
-    description.textContent = DEFAULT_DESCRIPTION;
+function setNoticeStatus(text, tone) {
+    noticeStatus.textContent = text || "";
+    noticeStatus.className = tone || "";
 }
 
 function setMainCard(eyebrowText, titleText, descriptionText) {
@@ -318,110 +260,6 @@ function hostSessionInterlocked() {
     return readSessionCookie(HOST_INTERLOCK_KEY) === HOST_INTERLOCK_VALUE;
 }
 
-let cacheReloadStarted = false;
-function reloadWithUpdatedCache(statusText, messageText) {
-    if (cacheReloadStarted) return;
-    cacheReloadStarted = true;
-    setCacheStatus(statusText, "ready");
-    setStep(stepCache, "done", "PRONTO");
-    track0.className = "track done";
-    footnote.textContent = "REABRINDO O HOST ATUALIZADO";
-    setStatus(messageText, "success");
-    setTimeout(function () {
-        try { location.reload(); } catch (_) {}
-    }, 900);
-}
-
-function watchOfflineCache() {
-    const appCache = window.applicationCache;
-    let cacheGateOpen = false;
-    function finishCacheStep(statusText, statusTone, stepState, stepText) {
-        if (cacheGateOpen) return;
-        cacheGateOpen = true;
-        const cacheConfirmed = stepState === "done" || stepState === "local";
-        const cacheMessage = stepState === "local"
-            ? "Cache do Guia carregado localmente. Identificando o firmware."
-            : "Cache do Guia pronto. Identificando o firmware.";
-        setCacheStatus(statusText, statusTone);
-        resetCacheCard();
-        setStep(stepCache, cacheConfirmed ? "done" : "warn", stepText);
-        track0.className = cacheConfirmed ? "track done" : "track warn";
-        setStep(step1, "current", "DETECTANDO");
-        footnote.textContent = "EXECUÇÃO AUTOMÁTICA EM ANDAMENTO";
-        setStatus(cacheConfirmed
-            ? cacheMessage
-            : "Cache do Guia não confirmou. Continuando com os arquivos disponíveis.",
-            cacheConfirmed ? "success" : "warning");
-        startHostFlow();
-    }
-    if (!appCache || typeof appCache.addEventListener !== "function") {
-        finishCacheStep("CACHE DO GUIA: INDISPONÍVEL", "warn", "warn", "INDISP.");
-        return;
-    }
-    function syncCacheStatus() {
-        if (appCache.status === appCache.IDLE)
-            finishCacheStep("CACHE DO GUIA: PRONTO", "ready", "done", "PRONTO");
-        else if (appCache.status === appCache.CHECKING) {
-            setStep(stepCache, "current", "VERIFICANDO");
-            setCacheStatus("CACHE DO GUIA: VERIFICANDO", "busy");
-        } else if (appCache.status === appCache.DOWNLOADING) {
-            setStep(stepCache, "current", "BAIXANDO");
-            setCacheStatus("CACHE DO GUIA: BAIXANDO", "busy");
-        } else if (appCache.status === appCache.UPDATEREADY) {
-            try { appCache.swapCache(); } catch (_) {}
-            reloadWithUpdatedCache("CACHE DO GUIA: ATUALIZADO",
-                "Cache atualizada. Reabrindo o host antes do fluxo.");
-        }
-        else if (appCache.status === appCache.OBSOLETE)
-            finishCacheStep("CACHE DO GUIA: LIMPO", "warn", "warn", "LIMPO");
-    }
-    appCache.addEventListener("checking", function () {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        setStep(stepCache, "current", "VERIFICANDO");
-        setCacheStatus("CACHE DO GUIA: VERIFICANDO", "busy");
-    }, false);
-    appCache.addEventListener("downloading", function () {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        setStep(stepCache, "current", "BAIXANDO");
-        setCacheStatus("CACHE DO GUIA: BAIXANDO ARQUIVOS", "busy");
-    }, false);
-    appCache.addEventListener("progress", function (event) {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        const loaded = event && typeof event.loaded === "number" ? event.loaded : 0;
-        const total = event && typeof event.total === "number" ? event.total : 0;
-        if (total > 0) {
-            setStep(stepCache, "current", loaded + "/" + total);
-            setCacheStatus("CACHE DO GUIA: " + loaded + "/" + total, "busy");
-        } else {
-            setStep(stepCache, "current", "BAIXANDO");
-            setCacheStatus("CACHE DO GUIA: BAIXANDO", "busy");
-        }
-    }, false);
-    appCache.addEventListener("cached", function () {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        finishCacheStep("CACHE DO GUIA: PRONTO", "ready", "done", "PRONTO");
-    }, false);
-    appCache.addEventListener("noupdate", function () {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        finishCacheStep("CACHE DO GUIA: PRONTO", "ready", "done", "PRONTO");
-    }, false);
-    appCache.addEventListener("updateready", function () {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        try { appCache.swapCache(); } catch (_) {}
-        reloadWithUpdatedCache("CACHE DO GUIA: ATUALIZADO",
-            "Cache atualizada. Reabrindo o host antes do fluxo.");
-    }, false);
-    appCache.addEventListener("obsolete", function () {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        finishCacheStep("CACHE DO GUIA: LIMPO", "warn", "warn", "LIMPO");
-    }, false);
-    appCache.addEventListener("error", function () {
-        if (cacheGateOpen || cacheReloadStarted) return;
-        finishCacheStep("CACHE DO GUIA: CARREGADO", "ready", "local", "PRONTO");
-    }, false);
-    syncCacheStatus();
-}
-
 function setStep(node, state, text) {
     node.className = "step" + (state ? " " + state : "");
     node.querySelector(".step-state").textContent = text;
@@ -429,23 +267,19 @@ function setStep(node, state, text) {
 }
 
 function showHostSessionInterlock() {
-    resetCacheCard();
-    setCacheStatus("JAILBREAK SOMENTE NA PRÓXIMA INICIALIZAÇÃO", "warn");
-    setStep(stepCache, "done", "PRONTO");
+    setNoticeStatus("JAILBREAK SOMENTE NA PRÓXIMA INICIALIZAÇÃO", "warn");
     setStep(step1, fw ? "done" : "warn", fw ? "PS5 " + fw : "PS5");
     setStep(step2, "warn", "JÁ FEITO");
     setStep(step3, "warn", "JÁ FEITO");
     setStep(step4, "warn", "JÁ FEITO");
     setStep(step5, "warn", "JÁ FEITO");
-    track0.className = "track done";
+    track0.className = "track warn";
     track1.className = "track warn";
     track2.className = "track warn";
     track3.className = "track warn";
-    track4.className = "track warn";
     offsetsValue.textContent = "Desbloqueado";
-    eyebrow.textContent = "JAILBREAK JÁ REALIZADO";
-    pageTitle.textContent = "PS5 já desbloqueado";
-    description.textContent = "Não é necessário executar o processo novamente.";
+    setMainCard("JAILBREAK JÁ REALIZADO", "PS5 já desbloqueado",
+        "Não é necessário executar o processo novamente.");
     footnote.textContent = "PROCESSO JÁ REALIZADO";
     setStatus("Jailbreak já realizado. Não é necessário executar novamente.", "warning");
 }
@@ -479,7 +313,8 @@ let pldmgrReported = false;
 if (hostSessionInterlocked()) {
     showHostSessionInterlock();
 } else {
-    watchOfflineCache();
+    setStep(step1, "current", "DETECTANDO");
+    startHostFlow();
 }
 
 function fwNum(s) {
@@ -520,7 +355,6 @@ fetch(OFFSETS_URL, { cache: "no-store" })
             setStep(step2, "", "INDISPONÍVEL");
             setStep(step3, "", "INDISPONÍVEL");
             setStep(step4, "", "INDISPONÍVEL");
-            setStep(step5, "", "INDISPONÍVEL");
             setStatus("Este navegador não foi identificado como um navegador do PS5.", "error");
             return;
         }
@@ -530,14 +364,13 @@ fetch(OFFSETS_URL, { cache: "no-store" })
         if (entry) {
             compatibilityTone = "done";
             offsetsValue.textContent = slopkitSupported ? "Completo" : "WebKit apenas";
-            track1.className = "track done";
+            track0.className = "track done";
             setMainCard("FIRMWARE DETECTADO", "PS5 " + fw, slopkitSupported
                 ? "Suporte completo confirmado. WebKit iniciando automaticamente."
                 : "Firmware reconhecido para WebKit. Fluxo completo indisponível.");
             setStep(step2, "current", "INICIANDO");
             setStep(step3, "", slopkitSupported ? "AGUARDANDO" : "INDISPONÍVEL");
             setStep(step4, "", slopkitSupported ? "AGUARDANDO" : "INDISPONÍVEL");
-            setStep(step5, "", slopkitSupported ? "AGUARDANDO" : "INDISPONÍVEL");
             setStatus(slopkitSupported
                 ? "Firmware " + fw + " reconhecido. Fluxo completo iniciando automaticamente."
                 : "Firmware " + fw + " reconhecido para WebKit. Fluxo completo indisponível neste firmware.",
@@ -550,13 +383,12 @@ fetch(OFFSETS_URL, { cache: "no-store" })
             entry = data[near];
             compatibilityTone = "warn";
             offsetsValue.textContent = "Não verificada";
-            track1.className = "track warn";
+            track0.className = "track warn";
             setMainCard("FIRMWARE NÃO VERIFICADO", "PS5 " + fw,
                 "Usando offsets " + near + ". WebKit iniciando automaticamente.");
             setStep(step2, "current", "INICIANDO");
             setStep(step3, "", slopkitSupported ? "AGUARDANDO" : "INDISPONÍVEL");
             setStep(step4, "", slopkitSupported ? "AGUARDANDO" : "INDISPONÍVEL");
-            setStep(step5, "", slopkitSupported ? "AGUARDANDO" : "INDISPONÍVEL");
             setStatus("Não há uma versão exata para o firmware " + fw + ". Será usada a versão "
                 + near + ", ainda não verificada. WebKit iniciando automaticamente.", "warning");
             scheduleWebKit();
@@ -567,7 +399,6 @@ fetch(OFFSETS_URL, { cache: "no-store" })
             setStep(step2, "fail", "BLOQUEADO");
             setStep(step3, "", "INDISPONÍVEL");
             setStep(step4, "", "INDISPONÍVEL");
-            setStep(step5, "", "INDISPONÍVEL");
             setStatus("O firmware " + fw + " não é compatível com o fluxo completo deste pacote.", "error");
         }
     })
@@ -577,12 +408,11 @@ fetch(OFFSETS_URL, { cache: "no-store" })
             "Não foi possível verificar os offsets do fluxo.");
         if (fw) {
             setStep(step1, "done", "PS5 " + fw);
-            track1.className = "track done";
+            track0.className = "track done";
         }
         setStep(step2, "fail", "FALHA AO CARREGAR");
         setStep(step3, "", "INDISPONÍVEL");
         setStep(step4, "", "INDISPONÍVEL");
-        setStep(step5, "", "INDISPONÍVEL");
         setStatus("Não foi possível verificar o suporte do fluxo completo.", "error");
     });
 }
@@ -603,9 +433,9 @@ function runWebKit() {
     q.set("ere", entry.ere);
 
     if (compatibilityTone === "done") {
-        track1.className = "track done";
+        track0.className = "track done";
     } else {
-        track1.className = "track warn";
+        track0.className = "track warn";
     }
     setStep(step2, "current", "EM EXECUÇÃO");
     eyebrow.textContent = "WEBKIT EM EXECUÇÃO";
@@ -642,7 +472,7 @@ function runWebKit() {
         resultMonitor = null;
         setStep(step2, "done", "CONCLUÍDO");
         if (slopkitSupported) {
-            track2.className = "track done";
+            track1.className = "track done";
             setStep(step3, "current", "INICIANDO");
             setStep(step4, "", "AGUARDANDO");
             setStep(step5, "", "AGUARDANDO");
@@ -653,7 +483,7 @@ function runWebKit() {
             setStatus("WebKit concluído com sucesso. Slopkit iniciando automaticamente.", "success");
             setTimeout(startSlopkit, 450);
         } else {
-            track2.className = "track warn";
+            track1.className = "track warn";
             setStep(step3, "warn", "NÃO SUPORTADO");
             setStep(step4, "", "INDISPONÍVEL");
             setStep(step5, "", "INDISPONÍVEL");
@@ -739,7 +569,7 @@ function handleSlopkitMessage(event) {
         && /(?:^|-)shellcodeRet=0x0+(?:-|$)/.test(extra)) {
         slopkitReady = true;
         setStep(step3, "done", "ELF PRONTO");
-        track3.className = "track done";
+        track2.className = "track done";
         setStep(step4, "current", "ENVIANDO");
         eyebrow.textContent = "PLDMGR EM EXECUÇÃO";
         pageTitle.textContent = "Carregando PLDMGR";
@@ -761,8 +591,9 @@ function handleSlopkitMessage(event) {
         const name = payloadNameFrom(extra);
         if (name === PLDMGR_PAYLOAD) {
             pldmgrReported = true;
+            setStep(step3, "done", "CONCLUÍDO");
             setStep(step4, "done", "CONCLUÍDO");
-            track4.className = "track done";
+            track3.className = "track done";
             setStep(step5, "current", "ENVIANDO");
             eyebrow.textContent = "HOST PSM EM EXECUÇÃO";
             pageTitle.textContent = "Instalando Host PSM";
@@ -773,11 +604,11 @@ function handleSlopkitMessage(event) {
         }
         if (name === HOST_PSM_PAYLOAD) {
             setStep(step5, "done", "CONCLUÍDO");
-            eyebrow.textContent = "FLUXO CONCLUÍDO";
-            pageTitle.textContent = "Fluxo concluído";
-            description.textContent = "WebKit, Slopkit, PLDMGR e Host PSM carregados com sucesso.";
+            eyebrow.textContent = "JAILBREAK CONCLUÍDO";
+            pageTitle.textContent = "PS5 desbloqueado";
+            description.textContent = "WebKit, Slopkit, PLDMGR e Host PSM concluídos com sucesso.";
             footnote.textContent = "FLUXO CONCLUÍDO";
-            setStatus("Host PSM carregado com sucesso.", "success");
+            setStatus("Processo concluído. O PS5 está desbloqueado e pronto para uso.", "success");
         }
     } else if (tag === "ELF-SEND-FAILED") {
         const name = payloadNameFrom(extra);
