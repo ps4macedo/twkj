@@ -513,12 +513,10 @@ const PAYLOAD_PORT = 9021;
 const PAYLOAD_BUFFER_SIZE = 0x10000;
 const PAYLOAD_MAX_SIZE = 0x400000;
 const PAYLOAD_ALLOWLIST = [
-    "pldmgr_v0.5.1.elf",
-    "Host-PSM-v1.1.0.elf"
+    "pldmgr_v0.5.1.elf"
 ];
 const PAYLOAD_SEQUENCE_MAX_ATTEMPTS = 3;
 const PAYLOAD_SEQUENCE_RETRY_DELAY_MS = 300;
-const PAYLOAD_SEQUENCE_INTER_DELAY_MS = 1000;
 let payloadSendStore = null;
 let payloadSockaddrStore = null;
 let payloadSocketOptionStore = null;
@@ -748,8 +746,6 @@ async function sendPayloadSequenceFromParent(names) {
         for (let i = 0; i < list.length; i++) {
             currentName = String(list[i] || "");
             await sendPayloadWithRetry(currentName);
-            if (i + 1 < list.length)
-                await wait(PAYLOAD_SEQUENCE_INTER_DELAY_MS);
         }
     } catch (error) {
         flushMark("ELF-SEND-FAILED", "name=" + clean(currentName) + "-why="

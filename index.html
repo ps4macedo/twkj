@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#020711">
-<title>PS5/WEBKIT-SLOPKIT-PLDMGR-HOST-PSM</title>
+<title>PS5/WEBKIT-SLOPKIT-PLDMGR</title>
 <style>
 *{box-sizing:border-box}
 html,body{width:100%;height:100%;margin:0;overflow:hidden}
@@ -64,9 +64,9 @@ body{
 #chain-badge .badge-sub{display:block;margin-top:1px;color:#92a8ba;font-size:6px;font-weight:700;letter-spacing:.9px;line-height:7px}
 #steps{position:absolute;left:30px;right:30px;top:119px;height:68px}
 .track{position:absolute;top:16px;height:2px;background:#2c3c49;box-shadow:0 1px 0 rgba(0,0,0,.85)}
-#track-0{left:52px;width:159px}#track-1{left:211px;width:159px}#track-2{left:370px;width:159px}#track-3{left:529px;width:159px}
+#track-0{left:52px;width:212px}#track-1{left:264px;width:212px}#track-2{left:476px;width:212px}
 .step{position:absolute;top:0;width:104px;text-align:center;color:#778590}
-#step-1{left:0}#step-2{left:159px}#step-3{left:318px}#step-4{left:477px}#step-5{left:636px}
+#step-1{left:0}#step-2{left:212px}#step-3{left:424px}#step-4{left:636px}
 .step-node{
     width:34px;height:34px;margin:0 auto;border:1px solid #536370;border-radius:50%;
     background-color:#050b12;background-image:-webkit-linear-gradient(top,#0d1823,#03070b);background-image:linear-gradient(to bottom,#0d1823,#03070b);
@@ -117,26 +117,25 @@ h1{margin:12px 0 0;font-size:29px;line-height:1.08;letter-spacing:.1px;color:#f7
     <div id="screen-aura"></div>
     <main id="panel" aria-labelledby="page-title">
         <header id="header">
-            <div id="brand">PS5 <span class="brand-accent">/</span> WEBKIT <span class="brand-accent">+</span> SLOPKIT <span class="brand-accent">+</span> PLDMGR <span class="brand-accent">+</span> HOST PSM</div>
+            <div id="brand">PS5 <span class="brand-accent">/</span> WEBKIT <span class="brand-accent">+</span> SLOPKIT <span class="brand-accent">+</span> PLDMGR</div>
             <div id="subtitle">FIRMWARES COMPATÍVEIS: 9.00 - 12.00</div>
             <div id="credits-line">Créditos: WebKit: Jordyidk | Slopkit: Egy, Sonic, Yenyen, Zeco, Gezine, Echostretch, Ufm42, TheFloW, John Tornblom, Flatz, PS5 R&amp;D Discord.</div>
-            <div id="chain-badge"><span class="badge-label">HOST PSMACEDO</span><span class="badge-main">AUTOMÁTICO</span><span class="badge-sub">VERSÃO 1.1.0</span></div>
+            <div id="chain-badge"><span class="badge-label">HOST PSMACEDO</span><span class="badge-main">AUTOMÁTICO</span><span class="badge-sub">VERSÃO 1.1.1</span></div>
         </header>
 
         <section id="steps" aria-label="Etapas da verificação">
-            <div id="track-0" class="track"></div><div id="track-1" class="track"></div><div id="track-2" class="track"></div><div id="track-3" class="track"></div>
+            <div id="track-0" class="track"></div><div id="track-1" class="track"></div><div id="track-2" class="track"></div>
             <div id="step-1" class="step current"><div class="step-node">1</div><div class="step-name">FIRMWARE</div><div class="step-state">AGUARDANDO</div></div>
             <div id="step-2" class="step"><div class="step-node">2</div><div class="step-name">WEBKIT</div><div class="step-state">AGUARDANDO</div></div>
             <div id="step-3" class="step"><div class="step-node">3</div><div class="step-name">SLOPKIT</div><div class="step-state">AGUARDANDO</div></div>
             <div id="step-4" class="step"><div class="step-node">4</div><div class="step-name">PLDMGR</div><div class="step-state">AGUARDANDO</div></div>
-            <div id="step-5" class="step"><div class="step-node">5</div><div class="step-name">HOST PSM</div><div class="step-state">AGUARDANDO</div></div>
         </section>
 
         <section id="content">
             <div id="content-copy">
                 <div id="eyebrow">FLUXO COMPLETO</div>
-                <h1 id="page-title">WebKit + Slopkit + PLDMGR + Host PSM</h1>
-                <p id="description">Firmwares compatíveis: 9.00 - 12.00. Execução automática até o Host PSM.</p>
+                <h1 id="page-title">WebKit + Slopkit + PLDMGR</h1>
+                <p id="description">Firmwares compatíveis: 9.00 - 12.00. Execução automática até o PLDMGR.</p>
             </div>
             <div id="firmware-card">
                 <div id="firmware-label" class="data-label">Firmware detectado</div>
@@ -161,7 +160,6 @@ const ENGINE_PASS_KEY = "renderer-notify-auto-proof-2:passed";
 const OFFSETS_URL = "offsets/offsets.json";
 const SLOPKIT_URL = "slopkit/poops.html?go=1&auto=1&production=1&trigger=netcontrol&attempts=8&only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&log=debug&payload=1&v=final";
 const PLDMGR_PAYLOAD = "pldmgr_v0.5.1.elf";
-const HOST_PSM_PAYLOAD = "Host-PSM-v1.1.0.elf";
 const HOST_INTERLOCK_KEY = "host_psmacedo_v3_slopkit_started";
 const HOST_INTERLOCK_VALUE = "1";
 const HOST_INTERLOCK_TOKEN = HOST_INTERLOCK_KEY + "=" + HOST_INTERLOCK_VALUE;
@@ -187,11 +185,9 @@ const step1 = document.getElementById("step-1");
 const step2 = document.getElementById("step-2");
 const step3 = document.getElementById("step-3");
 const step4 = document.getElementById("step-4");
-const step5 = document.getElementById("step-5");
 const track0 = document.getElementById("track-0");
 const track1 = document.getElementById("track-1");
 const track2 = document.getElementById("track-2");
-const track3 = document.getElementById("track-3");
 const contentCard = document.getElementById("content");
 const eyebrow = document.getElementById("eyebrow");
 const pageTitle = document.getElementById("page-title");
@@ -272,11 +268,9 @@ function showHostSessionInterlock() {
     setStep(step2, "warn", "JÁ FEITO");
     setStep(step3, "warn", "JÁ FEITO");
     setStep(step4, "warn", "JÁ FEITO");
-    setStep(step5, "warn", "JÁ FEITO");
     track0.className = "track warn";
     track1.className = "track warn";
     track2.className = "track warn";
-    track3.className = "track warn";
     offsetsValue.textContent = "Desbloqueado";
     setMainCard("JAILBREAK JÁ REALIZADO", "PS5 já desbloqueado",
         "Não é necessário executar o processo novamente.");
@@ -309,7 +303,6 @@ let slopkitSupported = false;
 let slopFrame = null;
 let slopkitReady = false;
 let payloadSequenceSent = false;
-let pldmgrReported = false;
 if (hostSessionInterlocked()) {
     showHostSessionInterlock();
 } else {
@@ -475,7 +468,6 @@ function runWebKit() {
             track1.className = "track done";
             setStep(step3, "current", "INICIANDO");
             setStep(step4, "", "AGUARDANDO");
-            setStep(step5, "", "AGUARDANDO");
             eyebrow.textContent = "SLOPKIT PRONTO";
             pageTitle.textContent = "WebKit confirmado";
             description.textContent = "A etapa WebKit foi concluída. Slopkit iniciando automaticamente.";
@@ -486,7 +478,6 @@ function runWebKit() {
             track1.className = "track warn";
             setStep(step3, "warn", "NÃO SUPORTADO");
             setStep(step4, "", "INDISPONÍVEL");
-            setStep(step5, "", "INDISPONÍVEL");
             eyebrow.textContent = "WEBKIT CONCLUÍDO";
             pageTitle.textContent = "WebKit confirmado";
             description.textContent = "A etapa WebKit foi concluída, mas o fluxo completo deste pacote não cobre este firmware.";
@@ -502,8 +493,8 @@ function startSlopkit() {
     setStep(step3, "current", "EM EXECUÇÃO");
     eyebrow.textContent = "SLOPKIT EM EXECUÇÃO";
     pageTitle.textContent = "Executando Slopkit";
-    description.textContent = "Slopkit em execução. Preparando o ambiente para o PLDMGR e Host PSM.";
-    footnote.textContent = "PLDMGR E HOST PSM SERÃO CARREGADOS AUTOMATICAMENTE";
+    description.textContent = "Slopkit em execução. Preparando o ambiente para o PLDMGR.";
+    footnote.textContent = "PLDMGR SERÁ CARREGADO AUTOMATICAMENTE";
     setStatus("Slopkit iniciado. Aguardando conclusão da etapa…", "");
 
     slopFrame = document.createElement("iframe");
@@ -563,7 +554,7 @@ function handleSlopkitMessage(event) {
     } else if (tag === "STAGE3-DONE") {
         setStatus("Slopkit avançou. Validando o ambiente…", "");
     } else if (tag === "STAGE4-DONE") {
-        setStatus("Slopkit concluiu a preparação. Carregando PLDMGR e Host PSM…", "");
+        setStatus("Slopkit concluiu a preparação. Carregando PLDMGR…", "");
     } else if (tag === "STAGE5-DONE"
         && /(?:^|-)joinRet=0(?:-|$)/.test(extra)
         && /(?:^|-)shellcodeRet=0x0+(?:-|$)/.test(extra)) {
@@ -573,9 +564,9 @@ function handleSlopkitMessage(event) {
         setStep(step4, "current", "ENVIANDO");
         eyebrow.textContent = "PLDMGR EM EXECUÇÃO";
         pageTitle.textContent = "Carregando PLDMGR";
-        description.textContent = "Ambiente pronto. PLDMGR será carregado e o Host PSM finalizará a instalação do atalho.";
-        footnote.textContent = "SEQUÊNCIA PLDMGR + HOST PSM EM ANDAMENTO";
-        setStatus("Ambiente pronto. Carregando PLDMGR e Host PSM automaticamente.", "success");
+        description.textContent = "Ambiente pronto. PLDMGR será carregado automaticamente.";
+        footnote.textContent = "CARREGAMENTO DO PLDMGR EM ANDAMENTO";
+        setStatus("Ambiente pronto. Carregando PLDMGR automaticamente.", "success");
         setTimeout(sendPayloadSequence, 900);
     } else if (tag === "POOPS-COMPLETE") {
         const m = /(?:^|-)fail=(\d+)(?:-|$)/.exec(extra);
@@ -583,51 +574,33 @@ function handleSlopkitMessage(event) {
         if (failed > 0 && !slopkitReady) {
             setStep(step3, "fail", "FALHOU");
             setStep(step4, "", "INDISPONÍVEL");
-            setStep(step5, "", "INDISPONÍVEL");
             footnote.textContent = "REINICIE O CONSOLE ANTES DE NOVA TENTATIVA";
             setStatus("O Slopkit finalizou com falha e exige reinicialização antes de tentar novamente.", "error");
         }
     } else if (tag === "ELF-SENT") {
         const name = payloadNameFrom(extra);
         if (name === PLDMGR_PAYLOAD) {
-            pldmgrReported = true;
             setStep(step3, "done", "CONCLUÍDO");
             setStep(step4, "done", "CONCLUÍDO");
-            track3.className = "track done";
-            setStep(step5, "current", "ENVIANDO");
-            eyebrow.textContent = "HOST PSM EM EXECUÇÃO";
-            pageTitle.textContent = "Instalando Host PSM";
-            description.textContent = "PLDMGR carregado. Host PSM está finalizando o atalho offline.";
-            footnote.textContent = "HOST PSM FINALIZANDO O ATALHO";
-            setStatus("PLDMGR carregado. Host PSM em andamento.", "success");
-            return;
-        }
-        if (name === HOST_PSM_PAYLOAD) {
-            setStep(step5, "done", "CONCLUÍDO");
             eyebrow.textContent = "JAILBREAK CONCLUÍDO";
             pageTitle.textContent = "PS5 desbloqueado";
-            description.textContent = "WebKit, Slopkit, PLDMGR e Host PSM concluídos com sucesso.";
+            description.textContent = "WebKit, Slopkit e PLDMGR concluídos com sucesso.";
             footnote.textContent = "FLUXO CONCLUÍDO";
             setStatus("Processo concluído. O PS5 está desbloqueado e pronto para uso.", "success");
+            return;
         }
     } else if (tag === "ELF-SEND-FAILED") {
         const name = payloadNameFrom(extra);
         const why = detailFrom(extra, "why");
         if (!name || name === PLDMGR_PAYLOAD) {
             setStep(step4, "fail", "FALHOU");
-            setStep(step5, "", "INDISPONÍVEL");
             setStatus(why
                 ? "Falha ao carregar o PLDMGR. Motivo: " + why
                 : "Falha ao carregar o PLDMGR.", "error");
-        } else if (name === HOST_PSM_PAYLOAD) {
-            setStep(step5, "fail", "FALHOU");
-            setStatus(why
-                ? "Falha ao carregar o Host PSM. Motivo: " + why
-                : "Falha ao carregar o Host PSM.", "error");
         }
         footnote.textContent = "VERIFIQUE O ESTADO DO CARREGAMENTO";
     } else if (tag === "ELF-SENDER-BLOCKED") {
-        setStep(pldmgrReported ? step5 : step4, "fail", "BLOQUEADO");
+        setStep(step4, "fail", "BLOQUEADO");
         setStatus("Carregamento bloqueado até reiniciar o console.", "error");
         footnote.textContent = "REINÍCIO NECESSÁRIO";
     }
@@ -637,13 +610,12 @@ function sendPayloadSequence() {
     if (!slopkitReady || payloadSequenceSent || !slopFrame || !slopFrame.contentWindow) return;
     payloadSequenceSent = true;
     setStep(step4, "current", "ENVIANDO");
-    setStep(step5, "", "AGUARDANDO");
-    setStatus("Carregando PLDMGR e Host PSM automaticamente…", "");
+    setStatus("Carregando PLDMGR automaticamente…", "");
     footnote.textContent = "NÃO FECHE ESTA PÁGINA DURANTE ESTA ETAPA";
     slopFrame.contentWindow.postMessage({
         source: "premium-shell",
         type: "send-payload-sequence",
-        names: [PLDMGR_PAYLOAD, HOST_PSM_PAYLOAD]
+        names: [PLDMGR_PAYLOAD]
     }, "*");
 }
 
